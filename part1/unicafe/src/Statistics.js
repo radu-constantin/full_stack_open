@@ -1,3 +1,5 @@
+import StatisticLine from "./StatisticLine";
+
 function Statistics({ good, neutral, bad }) {
   function calculateTotal() {
     return good + neutral + bad
@@ -13,15 +15,19 @@ function Statistics({ good, neutral, bad }) {
     return isNaN(percentage) ? 0 : percentage;
   }
 
+  if (good === 0 && neutral === 0 && bad === 0) return <p>No feedback given</p>
+
   return (
-    <>
-      <p>good {good}</p>
-      <p>neutral {neutral}</p>
-      <p>bad {bad}</p>
-      <p>all {calculateTotal()}</p>
-      <p>average {calculateAverage()}</p>
-      <p>positive {calculatePositivePercentage()}</p>
-    </>
+    <table>
+      <tbody>
+        <StatisticLine text="good" value={good} />
+        <StatisticLine text="neutral" value={neutral} />
+        <StatisticLine text="bad" value={bad} />
+        <StatisticLine text="all" value={calculateTotal()} />
+        <StatisticLine text="average" value={calculateAverage()} />
+        <StatisticLine text="positive" value={calculatePositivePercentage()} />
+      </tbody>
+    </table>
   )
 }
 

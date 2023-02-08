@@ -17,6 +17,20 @@ const App = () => {
     }
   }
 
+  function calculateTotal() {
+    return good + neutral + bad
+  }
+
+  function calculateAverage() {
+    const average = (good - bad) / calculateTotal();
+    return isNaN(average) ? 0 : average;
+  }
+
+  function calculatePositivePercentage() {
+    const percentage = good / calculateTotal() * 100;
+    return isNaN(percentage) ? 0 : percentage;
+  }
+
   return (
     <div>
       <h1>give feedback</h1>
@@ -26,7 +40,10 @@ const App = () => {
       <h1>statistics</h1>
       <p>good {good}</p> 
       <p>neutral {neutral}</p> 
-      <p>bad {bad}</p> 
+      <p>bad {bad}</p>
+      <p>all {calculateTotal()}</p>
+      <p>average {calculateAverage()}</p>
+      <p>positive {calculatePositivePercentage()}</p>
     </div>
   )
 }

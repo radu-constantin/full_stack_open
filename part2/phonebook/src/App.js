@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-import { getAll, create, remove } from './services/phonebook';
+import { getAll, create, remove, updateNumber } from './services/phonebook';
 
 import Filter from './Filter';
 import PersonForm from './PersonForm';
@@ -35,19 +35,25 @@ const App = () => {
   function addPerson(event) {
     event.preventDefault();
 
-    if (isDuplicate(newName)) {
-      setNewName("");
-      return alertUser(`${newName} is already in the phonebook!`);
-    }
-
     const personObj = {
       name: newName,
       number: newNumber
     }
 
-    create(personObj).then(response => {
-      setPersons(persons.concat(response));
-    })
+    if (isDuplicate(newName)) {
+      if (window.confirm(`${newName} is already in the phonebook. Do you want to replace the old number with a new one?`)) {
+        const targetPerson = persons.find(person => person.name.toLowerCase() === newName.toLowerCase());
+        const updatedPerson = {...targetPerson, number: newNumber};
+        updateNumber(updatedPerson);
+        setPersons(persons.map(person => {
+          return person.id === updatedPerson.id ? updatedPerson : person;
+        }))
+      };
+    } else {
+      create(personObj).then(response => {
+        setPersons(persons.concat(response));
+      })
+    }
 
     setNewName("");
     setNewNumber("");

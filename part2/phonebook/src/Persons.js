@@ -1,7 +1,11 @@
-function Persons({ personList }) {
+function Persons({ personList, deletePerson }) {
     return (
         <div>
-            {personList.map(person => <p key={person.name}>{person.name} {person.number}</p>)}
+            {personList.map(person =>
+                <p key={person.name} id={person.id}>{person.name} {person.number}
+                    <button onClick={deletePerson(person)}>delete</button>
+                </p>
+            )}
         </div>
     )
 }

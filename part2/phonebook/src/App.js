@@ -1,5 +1,6 @@
-import axios from 'axios';
 import { useState, useEffect } from 'react';
+
+import { getAll, create, remove } from './services/phonebook';
 
 import Filter from './Filter';
 import PersonForm from './PersonForm';
@@ -7,8 +8,8 @@ import Persons from './Persons';
 
 const App = () => {
   useEffect(() => {
-    axios.get("http://localhost:3001/persons").then(response => {
-      setPersons(response.data);
+    getAll().then(response => {
+      setPersons(response);
     })
   }, [])
 
@@ -17,8 +18,8 @@ const App = () => {
   const [newName, setNewName] = useState('');
   const [newNumber, setNewNumber] = useState('');
 
-  const displayedPersons = nameFilter === "" ? persons : persons.filter(person => person.name.toLowerCase().includes(nameFilter.toLowerCase())) 
- 
+  const displayedPersons = nameFilter === "" ? persons : persons.filter(person => person.name.toLowerCase().includes(nameFilter.toLowerCase()))
+
   function handleNameFilter(event) {
     setNameFilter(event.target.value);
   }
@@ -44,7 +45,10 @@ const App = () => {
       number: newNumber
     }
 
-    setPersons(persons.concat(personObj));
+    create(personObj).then(response => {
+      setPersons(persons.concat(response));
+    })
+
     setNewName("");
     setNewNumber("");
   }
@@ -57,14 +61,26 @@ const App = () => {
     window.alert(message);
   }
 
+  function removePersonHandler(personObj) {
+    return () => {
+      if (window.confirm(`Are you sure you want to delete ${personObj.name}?`)) {
+        remove(personObj.id).then(() => {
+          setPersons(persons.filter(person => {
+            return person.id !== personObj.id;
+          }))
+        })
+      };
+    }
+  }
+
   return (
     <div>
       <h2>Phonebook</h2>
-      <Filter inputHandler={handleNameFilter} inputValue={nameFilter}/>
+      <Filter inputHandler={handleNameFilter} inputValue={nameFilter} />
       <h2>Add new entry</h2>
-      <PersonForm submitHandler={addPerson} nameHandler={handleNameChange} numberHandler={handleNumberChange} newName={newName} newNumber={newNumber}/>
+      <PersonForm submitHandler={addPerson} nameHandler={handleNameChange} numberHandler={handleNumberChange} newName={newName} newNumber={newNumber} />
       <h2>Numbers</h2>
-      <Persons personList={displayedPersons}/>
+      <Persons personList={displayedPersons} deletePerson={removePersonHandler} />
     </div>
   )
 }

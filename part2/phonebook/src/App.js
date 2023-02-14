@@ -5,6 +5,7 @@ import { getAll, create, remove, updateNumber } from './services/phonebook';
 import Filter from './Filter';
 import PersonForm from './PersonForm';
 import Persons from './Persons';
+import Notification from './Notification';
 
 const App = () => {
   useEffect(() => {
@@ -17,6 +18,7 @@ const App = () => {
   const [nameFilter, setNameFilter] = useState("");
   const [newName, setNewName] = useState('');
   const [newNumber, setNewNumber] = useState('');
+  const [displayMessage, setDisplayMessage] = useState(null);
 
   const displayedPersons = nameFilter === "" ? persons : persons.filter(person => person.name.toLowerCase().includes(nameFilter.toLowerCase()))
 
@@ -32,6 +34,30 @@ const App = () => {
     setNewNumber(event.target.value);
   }
 
+  function updatePersonNumber(person, newNumber) {
+    const updatedPersonObj = { ...person, number: newNumber };
+    updateNumber(updatedPersonObj)
+      .then(() => {
+        setPersons(persons.map(person => {
+          return person.id === updatedPersonObj.id ? updatedPersonObj : person;
+        }))
+        showMessage("success", `Phone number for ${person.name} was succesfully updated!`);
+      })
+      .catch(() => {
+        showMessage("error", `${person.name} was already deleted!`);
+      })
+  }
+
+  function showMessage(type, message) {
+    setDisplayMessage({
+      type,
+      message
+    });
+    setTimeout(() => {
+      setDisplayMessage(null)
+    }, 5000);
+  }
+
   function addPerson(event) {
     event.preventDefault();
 
@@ -43,15 +69,12 @@ const App = () => {
     if (isDuplicate(newName)) {
       if (window.confirm(`${newName} is already in the phonebook. Do you want to replace the old number with a new one?`)) {
         const targetPerson = persons.find(person => person.name.toLowerCase() === newName.toLowerCase());
-        const updatedPerson = {...targetPerson, number: newNumber};
-        updateNumber(updatedPerson);
-        setPersons(persons.map(person => {
-          return person.id === updatedPerson.id ? updatedPerson : person;
-        }))
+        updatePersonNumber(targetPerson, personObj.number);
       };
     } else {
       create(personObj).then(response => {
         setPersons(persons.concat(response));
+        showMessage("success", `${response.name} was added to the phonebook!`);
       })
     }
 
@@ -61,10 +84,6 @@ const App = () => {
 
   function isDuplicate(name) {
     return !!persons.find(person => person.name.toLowerCase() === name.toLowerCase());
-  }
-
-  function alertUser(message) {
-    window.alert(message);
   }
 
   function removePersonHandler(personObj) {
@@ -82,6 +101,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={displayMessage} />
       <Filter inputHandler={handleNameFilter} inputValue={nameFilter} />
       <h2>Add new entry</h2>
       <PersonForm submitHandler={addPerson} nameHandler={handleNameChange} numberHandler={handleNumberChange} newName={newName} newNumber={newNumber} />

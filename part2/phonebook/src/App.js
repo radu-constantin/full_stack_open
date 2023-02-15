@@ -12,7 +12,7 @@ const App = () => {
     getAll().then(response => {
       setPersons(response);
     })
-  }, [])
+  }, []);
 
   const [persons, setPersons] = useState([]);
   const [nameFilter, setNameFilter] = useState("");

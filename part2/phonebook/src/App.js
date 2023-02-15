@@ -22,6 +22,12 @@ const App = () => {
 
   const displayedPersons = nameFilter === "" ? persons : persons.filter(person => person.name.toLowerCase().includes(nameFilter.toLowerCase()))
 
+  function refreshPersonList() {
+    getAll().then(response => {
+      setPersons(response);
+    })
+  }
+
   function handleNameFilter(event) {
     setNameFilter(event.target.value);
   }
@@ -45,6 +51,7 @@ const App = () => {
       })
       .catch(() => {
         showMessage("error", `${person.name} was already deleted!`);
+        refreshPersonList();
       })
   }
 
@@ -101,7 +108,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <Notification message={displayMessage} />
+      <Notification messageObj={displayMessage} />
       <Filter inputHandler={handleNameFilter} inputValue={nameFilter} />
       <h2>Add new entry</h2>
       <PersonForm submitHandler={addPerson} nameHandler={handleNameChange} numberHandler={handleNumberChange} newName={newName} newNumber={newNumber} />

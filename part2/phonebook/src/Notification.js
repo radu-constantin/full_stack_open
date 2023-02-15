@@ -1,4 +1,4 @@
-function Notification({ messageObj }) {
+function Notification( {messageObj} ) {
   const successDivStyle = {
     border: "solid green",
     background: "lightgrey",
@@ -6,9 +6,9 @@ function Notification({ messageObj }) {
   };
 
   const errorDivStyle = {
-    border: "solid green",
+    border: "solid red",
     background: "lightgrey",
-    color: "green"
+    color: "red"
   };
 
   const pStyle = {

@@ -2,8 +2,6 @@ import Country from "./Country";
 import { useState } from "react";
 
 export default function Countries({ countries }) {
-  const [countryView, setCountryView] = useState(null);
-
   function setContent() {
     if (!countries) {
       return null;

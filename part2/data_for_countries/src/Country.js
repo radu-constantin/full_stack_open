@@ -21,6 +21,7 @@ export default function Country({ countryData, details=false }) {
             return <li key={language}>{language}</li>
           })}
         </ul>
+        <div><button onClick={() => setShowDetails(false)}>hide</button></div>
       </div>
     )
   }

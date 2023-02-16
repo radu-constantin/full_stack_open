@@ -1,6 +1,9 @@
 import Country from "./Country";
+import { useState } from "react";
 
 export default function Countries({ countries }) {
+  const [countryView, setCountryView] = useState(null);
+
   function setContent() {
     if (!countries) {
       return null;
@@ -15,12 +18,14 @@ export default function Countries({ countries }) {
     } else if (countries.length > 1 && countries.length <= 10) {
       return (
         <ul>
-          {countries.map(country => <li key={country.name.common}>{country.name.common}</li>)}
+          {countries.map(country => 
+            <Country countryData={country}/>
+            )}
         </ul>
       )
     } else {
       return (
-        <Country countryData={countries[0]}/>
+        <Country countryData={countries[0]} details={true}/>
       )
     }
   }

@@ -4,6 +4,10 @@ export default function Countries({ countries }) {
   function setContent() {
     if (!countries) {
       return null;
+    } else if (countries.length === 0) {
+      return (
+        <p>No countries match your search criteria.</p>
+      )
     } else if (countries.length > 10) {
       return (
         <p>Too many matches, be more specific!</p>

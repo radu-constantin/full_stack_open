@@ -33,7 +33,6 @@ function App() {
   }, []);
 
   const [allCountries, setAllCountries] = useState(null);
-  const [countryFilter, setCountryFilter] = useState("");
   const [displayedCountries, setDisplayedCountries] = useState(null);
 
   function countryFilterHandler(event) {

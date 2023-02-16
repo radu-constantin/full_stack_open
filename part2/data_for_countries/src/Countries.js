@@ -1,5 +1,4 @@
 import Country from "./Country";
-import { useState } from "react";
 
 export default function Countries({ countries }) {
   function setContent() {
@@ -17,7 +16,7 @@ export default function Countries({ countries }) {
       return (
         <ul>
           {countries.map(country => 
-            <Country countryData={country}/>
+            <Country key={country.name.common}countryData={country}/>
             )}
         </ul>
       )

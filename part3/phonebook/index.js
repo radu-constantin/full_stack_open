@@ -28,9 +28,17 @@ app.get('/api/persons', (request, response) => {
   response.send(persons);
 });
 
+app.get('/api/persons/:id', (request, response) => {
+  const personID = Number(request.params.id);
+  const person = persons.find(person => person.id === personID);
+  if (person) {
+    response.send(person);
+  } else {
+    response.status(404).end();
+  }
+})
+
 app.get('/info', (request, response) => {
-  let responseDate = response.get("Date");
-  console.log(responseDate);
   let content = `<p>Phonebook has info for ${persons.length} people.<p>
   <p>${new Date()}<p>`
   response.send(content);

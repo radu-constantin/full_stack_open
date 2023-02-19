@@ -1,6 +1,8 @@
 const express = require('express');
 const app = express();
 
+app.use(express.json());
+
 let persons = [
   {
     "id": 1,
@@ -24,6 +26,18 @@ let persons = [
   }
 ];
 
+function isValidInput(person) {
+  return person.name && person.name !== "" && person.number && person.number !== "";
+}
+
+function checkForDuplicates(name) {
+  return persons.find(person => person.name.toLowerCase() === name.toLowerCase());
+}
+
+function generateID() {
+  return Math.floor(Math.random() * (999999 - 100000 + 1) + 100000)
+}
+
 app.get('/api/persons', (request, response) => {
   response.send(persons);
 });
@@ -35,6 +49,19 @@ app.get('/api/persons/:id', (request, response) => {
     response.send(person);
   } else {
     response.status(404).end();
+  }
+});
+
+app.post('/api/persons', (request, response) => {
+  let newPerson = request.body;
+  if (!isValidInput(newPerson)) {
+    response.status(406).send({ error: "No name or number entered!" })
+  } else if (checkForDuplicates(newPerson.name)) {
+    response.status(406).send({ error: `${newPerson.name} is already in the phonebook!` })
+  } else {
+    newPerson = { id: generateID(), ...newPerson }
+    persons = persons.concat(newPerson);
+    response.send(newPerson);
   }
 });
 

@@ -51,9 +51,11 @@ app.post('/api/persons', (request, response) => {
 });
 
 app.delete('/api/persons/:id', (request, response) => {
-  const personID = Number(request.params.id);
-  persons = persons.filter(person => person.id !== personID);
-  response.status(204).end();
+  const personID = request.params.id;
+
+  Person.findByIdAndDelete(personID).then(result => {
+    response.status(204).end();
+  })
 });
 
 app.get('/info', (request, response) => {

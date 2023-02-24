@@ -9,6 +9,12 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static("build"));
 
+function customErrorHandler(error, request, response, next) {
+  if (error.name === "CastError") {
+    return response.status(400).send({error: 'malformatted id'})
+  }
+}
+
 function isValidInput(person) {
   return person.name && person.name !== "" && person.number && person.number !== "";
 }
@@ -50,12 +56,15 @@ app.post('/api/persons', (request, response) => {
     // response.status(406).send({ error: `${newPerson.name} is already in the phonebook!` })
 });
 
-app.delete('/api/persons/:id', (request, response) => {
+app.delete('/api/persons/:id', (request, respons, next) => {
   const personID = request.params.id;
 
   Person.findByIdAndDelete(personID).then(result => {
     response.status(204).end();
   })
+  .catch(error => {
+    next(error);
+  }) 
 });
 
 app.get('/info', (request, response) => {
@@ -63,6 +72,8 @@ app.get('/info', (request, response) => {
   <p>${new Date()}<p>`
   response.send(content);
 });
+
+app.use(customErrorHandler);
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {

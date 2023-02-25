@@ -8,8 +8,18 @@ mongoose.connect(url).then(result => {
 });
 
 const personSchema = new mongoose.Schema({
-  name: String,
-  number: String
+  name: {
+    type: String,
+    minLength: 3
+  },
+  number: {
+    type: String,
+    validate: {
+      validator: function(number) {
+        return /^\d{2,3}-\d+/.test(number);
+      }
+    }
+  }
 });
 
 personSchema.set('toJSON', {

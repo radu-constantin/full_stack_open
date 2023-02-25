@@ -9,7 +9,7 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static("build"));
 
-function customErrorHandler(error, request, response, next) {
+function customErrorHandler(error, request, response) {
   if (error.name === "CastError") {
     return response.status(400).send({ error: 'malformatted id' })
   } else if (error.name === "ValidationError") {
@@ -17,13 +17,13 @@ function customErrorHandler(error, request, response, next) {
   }
 }
 
-function isValidInput(person) {
-  return person.name && person.name !== "" && person.number && person.number !== "";
-}
+// function isValidInput(person) {
+//   return person.name && person.name !== "" && person.number && person.number !== "";
+// }
 
-function checkForDuplicates(name) {
-  return persons.find(person => person.name.toLowerCase() === name.toLowerCase());
-}
+// function checkForDuplicates(name) {
+//   return persons.find(person => person.name.toLowerCase() === name.toLowerCase());
+// }
 
 app.get('/api/persons', (request, response) => {
   Person.find({}).then(result => {
@@ -70,7 +70,7 @@ app.put('/api/persons/:id', (request, response, next) => {
 app.delete('/api/persons/:id', (request, response, next) => {
   const personID = request.params.id;
 
-  Person.findByIdAndDelete(personID).then(result => {
+  Person.findByIdAndDelete(personID).then(() => {
     response.status(204).end();
   })
     .catch(error => {

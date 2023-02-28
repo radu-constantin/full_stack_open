@@ -4,14 +4,7 @@ const app = express();
 const cors = require('cors');
 const mongoose = require('mongoose');
 
-const blogSchema = new mongoose.Schema({
-  title: String,
-  author: String,
-  url: String,
-  likes: Number
-});
-
-const Blog = mongoose.model('Blog', blogSchema);
+const Blog = require('./models/blog');
 
 const mongoUrl = 'mongodb+srv://radu:felix2013@cluster0.nmpwvok.mongodb.net/blogApp?retryWrites=true&w=majority';
 mongoose.set("strictQuery", false);

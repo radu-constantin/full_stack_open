@@ -4,10 +4,10 @@ const app = express();
 const cors = require('cors');
 const mongoose = require('mongoose');
 const blogsRouter = require('./controllers/blogs');
+const config = require('./utils/config');
 
-const mongoUrl = 'mongodb+srv://radu:felix2013@cluster0.nmpwvok.mongodb.net/blogApp?retryWrites=true&w=majority';
 mongoose.set("strictQuery", false);
-mongoose.connect(mongoUrl);
+mongoose.connect(config.MONGODB_URI);
 
 app.use(cors());
 app.use(express.json());

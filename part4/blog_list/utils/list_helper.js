@@ -33,8 +33,32 @@ function favoriteBlog(blogs) {
   };
 }
 
+function mostBlogs(blogs) {
+  let authorList = {};
+  blogs.forEach(blog => {
+    const author = blog.author;
+    if (authorList[author]) {
+      authorList[author] += 1;
+    } else {
+      authorList[author] = 1;
+    }
+  });
+
+  let mostBlogsAuthor = null;
+  Object.entries(authorList).forEach(pair => {
+    if (mostBlogsAuthor === null) {
+      mostBlogsAuthor = pair;
+    } else if (pair[1] > mostBlogsAuthor[1]) {
+      mostBlogsAuthor = pair;
+    }
+  });
+
+  return {author: mostBlogsAuthor[0], blogs: mostBlogsAuthor[1]};
+}
+
 module.exports={
   dummy,
   totalLikes,
-  favoriteBlog
+  favoriteBlog,
+  mostBlogs
 };

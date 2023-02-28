@@ -99,3 +99,19 @@ describe('favorite blog', () => {
   });
 });
 
+describe("author with most blogs", () => {
+  test("when list has multiple blogs, find author with most blogs", () => {
+    expect(listHelper.mostBlogs(blogs)).toEqual({
+      author: "Robert C. Martin",
+      blogs: 3
+    });
+  });
+
+  test("when list has one blogs, return that author with number of blogs", () => {
+    expect(listHelper.mostBlogs(listWithOneBlog)).toEqual({
+      author: "Michael Chan",
+      blogs: 1
+    });
+  });
+});
+

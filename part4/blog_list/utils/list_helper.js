@@ -1,8 +1,6 @@
-const { mapReduce } = require("../models/blog");
-
 function dummy(blogs) {
   return 1;
-};
+}
 
 function totalLikes(blogs) {
   let likeList = [];
@@ -56,9 +54,33 @@ function mostBlogs(blogs) {
   return {author: mostBlogsAuthor[0], blogs: mostBlogsAuthor[1]};
 }
 
+function mostLikes(blogs) {
+  let authorList = {};
+  blogs.forEach(blog => {
+    const author = blog.author;
+    if (authorList[author]) {
+      authorList[author] += blog.likes;
+    } else {
+      authorList[author] = blog.likes;
+    }
+  });
+
+  let mostLikesAuthor = null;
+  Object.entries(authorList).forEach(pair => {
+    if (mostLikesAuthor === null) {
+      mostLikesAuthor = pair;
+    } else if (pair[1] > mostLikesAuthor[1]) {
+      mostLikesAuthor = pair;
+    }
+  });
+
+  return {author: mostLikesAuthor[0], likes: mostLikesAuthor[1]};
+}
+
 module.exports={
   dummy,
   totalLikes,
   favoriteBlog,
-  mostBlogs
+  mostBlogs,
+  mostLikes
 };

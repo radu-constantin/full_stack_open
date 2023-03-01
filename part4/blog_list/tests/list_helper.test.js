@@ -115,3 +115,19 @@ describe("author with most blogs", () => {
   });
 });
 
+describe("author with most likes", () => {
+  test("when list has multiple blogs, find author with most likes", () => {
+    expect(listHelper.mostLikes(blogs)).toEqual({
+        author: "Edsger W. Dijkstra",
+        likes: 17
+    });
+  });
+
+  test("when list has one blogs, return that author with number of blogs", () => {
+    expect(listHelper.mostLikes(listWithOneBlog)).toEqual({
+      author: "Michael Chan",
+      likes: 7
+    });
+  });
+});
+

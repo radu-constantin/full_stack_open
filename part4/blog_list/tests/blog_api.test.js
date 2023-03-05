@@ -31,4 +31,19 @@ describe('blog api tests', () => {
       expect(blog.id).toBeDefined();
     });
   });
+
+  test('can update db with a new blog', async () => {
+    const newBlog = {
+      title: "Test blog",
+      author: "Tester",
+      url: "https://test-blog.com",
+      likes: 12
+    };
+
+    await api.post("/api/blogs").send(newBlog);
+    const newBlogList = (await api.get("/api/blogs")).body;
+
+    expect(newBlogList).toHaveLength(initialBlogs.length + 1);
+    expect(newBlogList[newBlogList.length - 1]).toMatchObject(newBlog);
+  });
 });

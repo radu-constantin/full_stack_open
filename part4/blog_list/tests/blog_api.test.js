@@ -22,4 +22,13 @@ describe('blog api tests', () => {
     expect(response.headers['content-type']).toMatch(/application\/json/);
     expect(response.body).toHaveLength(initialBlogs.length);
   });
+
+  test('blogs have id property', async () => {
+    const response = await api.get("/api/blogs");
+    const blogs = response.body;
+
+    blogs.forEach(blog => {
+      expect(blog.id).toBeDefined();
+    });
+  });
 });

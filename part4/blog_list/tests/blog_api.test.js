@@ -61,4 +61,15 @@ describe('blog api tests', () => {
 
     expect(newBlog.likes).toBe(0);
   });
+
+  test("if title or url are missing from the request data, respond with status 400", async () => {
+    const testBlog = {
+      author: "Tester",
+      url: "https://test-blog.com",
+    };
+
+    const response = await api.post("/api/blogs").send(testBlog);
+
+    expect(response.status).toEqual(400);
+  });
 });

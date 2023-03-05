@@ -6,7 +6,7 @@ const api = supertest(app);
 
 const initialBlogs = testHelper.initialBlogs;
 
-beforeAll(async () => {
+beforeEach(async () => {
   await Blog.deleteMany({});
 
   for (const blog of initialBlogs) {
@@ -33,17 +33,32 @@ describe('blog api tests', () => {
   });
 
   test('can update db with a new blog', async () => {
-    const newBlog = {
+    const testBlog = {
       title: "Test blog",
       author: "Tester",
       url: "https://test-blog.com",
       likes: 12
     };
 
-    await api.post("/api/blogs").send(newBlog);
+    await api.post("/api/blogs").send(testBlog);
     const newBlogList = (await api.get("/api/blogs")).body;
 
     expect(newBlogList).toHaveLength(initialBlogs.length + 1);
-    expect(newBlogList[newBlogList.length - 1]).toMatchObject(newBlog);
+    expect(newBlogList[newBlogList.length - 1]).toMatchObject(testBlog);
+  });
+
+  test("if likes property is missing from the request, it defaults to 0", async () => {
+    const testBlog = {
+      title: "Test blog",
+      author: "Tester",
+      url: "https://test-blog.com",
+    };
+
+    await api.post("/api/blogs").send(testBlog);
+    const newBlogList = (await api.get("/api/blogs")).body;
+
+    const newBlog = newBlogList[newBlogList.length - 1];
+
+    expect(newBlog.likes).toBe(0);
   });
 });

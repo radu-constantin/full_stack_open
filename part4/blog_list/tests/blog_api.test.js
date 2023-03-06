@@ -69,7 +69,16 @@ describe('blog api tests', () => {
     };
 
     const response = await api.post("/api/blogs").send(testBlog);
-
     expect(response.status).toEqual(400);
+  });
+
+  test("status of 204 is returned when deleting a blog", async () => {
+    const initialBlogs = (await api.get('/api/blogs')).body;
+    
+    const response = await api.delete(`/api/blogs/${initialBlogs[0].id}`);
+    expect(response.status).toBe(204);
+
+    const newBlogs = (await api.get('/api/blogs')).body;
+    expect(newBlogs).toHaveLength(initialBlogs.length - 1);
   });
 });

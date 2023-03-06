@@ -15,7 +15,7 @@ beforeEach(async () => {
   }
 });
 
-describe('blog api tests', () => {
+describe('Retrieving blogs', () => {
   test('all blogs are received', async () => {
     const response = await api.get("/api/blogs");
     expect(response.status).toEqual(200);
@@ -31,7 +31,9 @@ describe('blog api tests', () => {
       expect(blog.id).toBeDefined();
     });
   });
+})
 
+describe('Creating blogs', () => {
   test('can update db with a new blog', async () => {
     const testBlog = {
       title: "Test blog",
@@ -71,10 +73,12 @@ describe('blog api tests', () => {
     const response = await api.post("/api/blogs").send(testBlog);
     expect(response.status).toEqual(400);
   });
+});
 
+describe("Deleting blogs", () => {
   test("status of 204 is returned when deleting a blog", async () => {
     const initialBlogs = (await api.get('/api/blogs')).body;
-    
+
     const response = await api.delete(`/api/blogs/${initialBlogs[0].id}`);
     expect(response.status).toBe(204);
 
@@ -82,3 +86,16 @@ describe('blog api tests', () => {
     expect(newBlogs).toHaveLength(initialBlogs.length - 1);
   });
 });
+
+describe("Updating blogs", () => {
+  test("return updated blog post with status 200", async () => {
+    const initialBlogs = (await api.get('/api/blogs')).body;
+
+    const response = await api.put(`/api/blogs/${initialBlogs[0].id}`).send({likes: 100});
+    expect(response.status).toBe(200);
+
+    const newBlogs = (await api.get('/api/blogs')).body;
+    expect(newBlogs[0].likes).toBe(100);
+  });
+});
+

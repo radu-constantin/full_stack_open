@@ -25,4 +25,10 @@ blogsRouter.delete('/:id', async (request, response) => {
   response.status(204).end();
 });
 
+blogsRouter.put('/:id', async (request, response) => {
+  const update = request.body;
+  const updatedBlog = await Blog.findByIdAndUpdate(request.params.id, update, {new: true});
+  response.send(updatedBlog);
+});
+
 module.exports = blogsRouter;

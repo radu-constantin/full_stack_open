@@ -31,7 +31,7 @@ describe('Retrieving blogs', () => {
       expect(blog.id).toBeDefined();
     });
   });
-})
+});
 
 describe('Creating blogs', () => {
   test('can update db with a new blog', async () => {

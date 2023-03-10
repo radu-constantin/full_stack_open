@@ -22,4 +22,16 @@ describe('when there is initially one user in db', () => {
 
     expect(users.length).toEqual(initialUsers.length + 1);
   });
+
+  test('fails with status code 400 if user or pass has less than 3 char', async () => {
+    const response = await api.post('/api/users').send({username: 'us', password: 'test'});
+    expect(response.status).toBe(400);
+    expect(response.body.error).toEqual('Username and password must have at least 3 characters!');
+  });
+
+  test('fails with status 400 if username already exists', async () => {
+    const response = await api.post('/api/users').send({username: 'root', password: 'testpass'});
+    expect(response.status).toBe(400);
+    expect(response.body.error).toEqual('Username already exists!');
+  });
 });

@@ -11,6 +11,9 @@ function tokenExtractor(request, response, next) {
 }
 
 async function userExtractor(request, response, next) {
+  if (!request.token) {
+    return response.status(401).json({ error: 'no token given'});
+  }
   const decodedToken = jwt.verify(request.token, process.env.SECRET);
   if (!decodedToken.id) {
     return response.status(401).json({ error: 'token invalid'});

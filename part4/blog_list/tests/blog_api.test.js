@@ -58,6 +58,18 @@ describe('Creating blogs', () => {
     expect(newBlogList[newBlogList.length - 1]).toMatchObject(testBlog);
   });
 
+  test('fails with status 401 if token is is not provided', async () => {
+    const testBlog = {
+      title: "Test blog",
+      author: "Tester",
+      url: "https://test-blog.com",
+      likes: 12
+    };
+
+    const response = await api.post("/api/blogs").send(testBlog);
+    expect(response.status).toBe(401);
+  });
+
   test("if likes property is missing from the request, it defaults to 0", async () => {
     const testBlog = {
       title: "Test blog",

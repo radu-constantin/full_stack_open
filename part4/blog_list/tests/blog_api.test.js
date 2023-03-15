@@ -1,10 +1,14 @@
 const Blog = require("../models/blog");
+const User = require("../models/user");
 const testHelper = require("./test_helper");
 const supertest = require("supertest");
 const app = require('../app');
 const api = supertest(app);
+const jwt = require('jsonwebtoken');
 
 const initialBlogs = testHelper.initialBlogs;
+let loggedUser;
+let userToken;
 
 beforeEach(async () => {
   await Blog.deleteMany({});
@@ -13,6 +17,11 @@ beforeEach(async () => {
     const blogObj = new Blog(blog);
     await blogObj.save();
   }
+
+  await User.deleteMany({});
+  const user = await testHelper.createTestUser();
+  loggedUser = await testHelper.loginUser(user);
+  userToken = loggedUser.token;
 });
 
 describe('Retrieving blogs', () => {
@@ -42,7 +51,7 @@ describe('Creating blogs', () => {
       likes: 12
     };
 
-    await api.post("/api/blogs").send(testBlog);
+    await api.post("/api/blogs").send(testBlog).set({Authorization: `Bearer ${userToken}`});
     const newBlogList = (await api.get("/api/blogs")).body;
 
     expect(newBlogList).toHaveLength(initialBlogs.length + 1);
@@ -56,7 +65,7 @@ describe('Creating blogs', () => {
       url: "https://test-blog.com",
     };
 
-    await api.post("/api/blogs").send(testBlog);
+    await api.post("/api/blogs").send(testBlog).set({Authorization: `Bearer ${userToken}`});
     const newBlogList = (await api.get("/api/blogs")).body;
 
     const newBlog = newBlogList[newBlogList.length - 1];
@@ -70,20 +79,28 @@ describe('Creating blogs', () => {
       url: "https://test-blog.com",
     };
 
-    const response = await api.post("/api/blogs").send(testBlog);
+    const response = await api.post("/api/blogs").send(testBlog).set({Authorization: `Bearer ${userToken}`});
     expect(response.status).toEqual(400);
   });
 });
 
 describe("Deleting blogs", () => {
   test("status of 204 is returned when deleting a blog", async () => {
-    const initialBlogs = (await api.get('/api/blogs')).body;
+    const testBlog = {
+      title: "Test blog",
+      author: "Tester",
+      url: "https://test-blog.com",
+      likes: 12
+    };
 
-    const response = await api.delete(`/api/blogs/${initialBlogs[0].id}`);
+    const newBlog = (await api.post("/api/blogs").send(testBlog).set({Authorization: `Bearer ${userToken}`})).body;
+    const oldBlogs = (await api.get('/api/blogs')).body;
+
+    const response = await api.delete(`/api/blogs/${newBlog.id}`).set({Authorization: `Bearer ${userToken}`});
     expect(response.status).toBe(204);
 
     const newBlogs = (await api.get('/api/blogs')).body;
-    expect(newBlogs).toHaveLength(initialBlogs.length - 1);
+    expect(newBlogs).toHaveLength(oldBlogs.length - 1);
   });
 });
 

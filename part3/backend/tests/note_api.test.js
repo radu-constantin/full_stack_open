@@ -5,6 +5,12 @@ const app = require('../app');
 const api = supertest(app);
 
 const Note = require('../models/note');
+const User = require('../models/user');
+
+beforeAll(async () => {
+  await User.deleteMany({});
+  await api.post('/api/users').send({ username: 'testUser', password: 'test' });
+});
 
 beforeEach(async () => {
   await Note.deleteMany({});
@@ -63,21 +69,25 @@ describe('viewing a specific note', () => {
 
 describe('addition of a new note', () => {
   test('succeeds with valid data', async () => {
+    const token = (await api.post('/api/login').send({ username: 'testUser', password: 'test' })).body.token;
+    console.log(token);
+
     const newNote = {
       content: 'async/await simplifies making async calls',
       important: true,
-    }
+    };
 
     await api
       .post('/api/notes')
       .send(newNote)
+      .set('Authorization', `Bearer ${token}`)
       .expect(201)
-      .expect('Content-Type', /application\/json/)
+      .expect('Content-Type', /application\/json/);
 
-    const notesAtEnd = await helper.notesInDb()
-    expect(notesAtEnd).toHaveLength(helper.initialNotes.length + 1)
+    const notesAtEnd = await helper.notesInDb();
+    expect(notesAtEnd).toHaveLength(helper.initialNotes.length + 1);
 
-    const contents = notesAtEnd.map(n => n.content)
+    const contents = notesAtEnd.map(n => n.content);
     expect(contents).toContain(
       'async/await simplifies making async calls'
     );

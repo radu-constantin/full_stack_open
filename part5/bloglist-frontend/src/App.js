@@ -1,15 +1,9 @@
 import { useState, useEffect } from 'react'
 import BlogList from './components/BlogList';
 import LoginForm from './components/LoginForm';
+import BlogForm from './components/BlogForm';
 
 import blogService from './services/blogs';
-
-/*
-  Implement login funcitonality with localstate
-- when user logs in store the token and username in the browser's local state.
-- implement a way to log out.
-*/
-
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -25,6 +19,7 @@ const App = () => {
     const loggedUser = window.localStorage.getItem('loggedUser');
     if (loggedUser) {
       setUser(JSON.parse(loggedUser));
+      blogService.setToken(JSON.parse(loggedUser).token);
     }
   }, [])
 
@@ -33,12 +28,17 @@ const App = () => {
     setUser(null);
   }
 
+  function updateBlogList(newBlog) {
+    setBlogs([...blogs, newBlog]);
+  }
+
   return (
     <>
       {user ?
         <>
           <h3>{user.name} is logged in</h3>
           <button onClick={handleLogout}>Logout</button>
+          <BlogForm updateBlogList={updateBlogList}/>
           <BlogList blogs={blogs} username={user.name} />
         </> :
         <LoginForm setUser={setUser} />

@@ -9,6 +9,7 @@ function LoginForm( {setUser}) {
     event.preventDefault();
     try {
       const response = await loginService.login({username, password});
+      window.localStorage.setItem('loggedUser', JSON.stringify(response));
       setUser(response);
     }
     catch(error) {

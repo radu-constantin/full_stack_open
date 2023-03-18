@@ -5,10 +5,9 @@ import LoginForm from './components/LoginForm';
 import blogService from './services/blogs';
 
 /*
-  Implement login funcitonality
-- token returned from succesful login is saved in the application state(user);
-- if user is not logged in, only the login form is visible;
-- if user is logged in, the name of the user and a list of blogs is shown.
+  Implement login funcitonality with localstate
+- when user logs in store the token and username in the browser's local state.
+- implement a way to log out.
 */
 
 
@@ -20,14 +19,30 @@ const App = () => {
     blogService.getAll().then(blogs =>
       setBlogs(blogs)
     )
+  }, []);
+
+  useEffect(() => {
+    const loggedUser = window.localStorage.getItem('loggedUser');
+    if (loggedUser) {
+      setUser(JSON.parse(loggedUser));
+    }
   }, [])
+
+  function handleLogout(event) {
+    window.localStorage.removeItem('loggedUser');
+    setUser(null);
+  }
 
   return (
     <>
       {user ?
-        <BlogList blogs={blogs} username={user.name} /> :
-        <LoginForm setUser={setUser}/>
-        }
+        <>
+          <h3>{user.name} is logged in</h3>
+          <button onClick={handleLogout}>Logout</button>
+          <BlogList blogs={blogs} username={user.name} />
+        </> :
+        <LoginForm setUser={setUser} />
+      }
     </>
   )
 }

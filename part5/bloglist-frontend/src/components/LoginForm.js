@@ -2,7 +2,7 @@ import { useState } from 'react';
 import loginService from '../services/login';
 import blogService from '../services/blogs';
 
-function LoginForm( {setUser}) {
+function LoginForm( {setUser, setShowNotification, clearNotification}) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
@@ -15,7 +15,8 @@ function LoginForm( {setUser}) {
       setUser(response);
     }
     catch(error) {
-      console.log(error.response.data.error);
+      setShowNotification({type: 'failure', message: `${error.response.data.error}`})
+      clearNotification();
     }
   }
 

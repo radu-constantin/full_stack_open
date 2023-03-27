@@ -1,7 +1,7 @@
 import { useState } from "react";
 import blogService from '../services/blogs';
 
-function BlogForm({ updateBlogList, setShowNotification, clearNotification }) {
+function BlogForm({ updateBlogList, setShowNotification, clearNotification, toggleVisibility }) {
   const [title, setTitle] = useState('');
   const [author, setAuthor] = useState('');
   const [url, setUrl] = useState('');
@@ -16,6 +16,7 @@ function BlogForm({ updateBlogList, setShowNotification, clearNotification }) {
       updateBlogList(newBlog);
       setShowNotification({type: 'success', message: `"${newBlog.title}" was successfuly added`})
       clearNotification();
+      toggleVisibility();
     }
     catch(error) {
       setShowNotification({type: 'failure', message: `${error.response.data.error}`})

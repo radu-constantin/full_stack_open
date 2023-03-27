@@ -1,10 +1,11 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import BlogList from './components/BlogList';
 import LoginForm from './components/LoginForm';
 import BlogForm from './components/BlogForm';
 import Notification from './components/Notification'
 
 import blogService from './services/blogs';
+import Togglable from './components/Togglable';
 
 /*
   Implement notifications for: 
@@ -19,6 +20,8 @@ const App = () => {
   const [blogs, setBlogs] = useState([]);
   const [user, setUser] = useState(null);
   const [showNotification, setShowNotification] = useState(null);
+
+  const blogFormRef = useRef();
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -42,7 +45,7 @@ const App = () => {
   function updateBlogList(newBlog) {
     setBlogs([...blogs, newBlog]);
   }
-  
+
   function clearNotification() {
     setTimeout(() => {
       setShowNotification(null);
@@ -51,15 +54,18 @@ const App = () => {
 
   return (
     <>
-      {showNotification && <Notification type={showNotification.type} message={showNotification.message}/>}
+      {showNotification && <Notification type={showNotification.type} message={showNotification.message} />}
       {user ?
         <>
           <h3>{user.name} is logged in</h3>
           <button onClick={handleLogout}>Logout</button>
-          <BlogForm updateBlogList={updateBlogList} setShowNotification={setShowNotification} clearNotification={clearNotification}/>
+          <Togglable buttonLabel="create blog" ref={blogFormRef}>
+            <BlogForm updateBlogList={updateBlogList} setShowNotification={setShowNotification} clearNotification={clearNotification} />
+          </Togglable>
+
           <BlogList blogs={blogs} username={user.name} />
         </> :
-        <LoginForm setUser={setUser} setShowNotification={setShowNotification} clearNotification={clearNotification}/>
+        <LoginForm setUser={setUser} setShowNotification={setShowNotification} clearNotification={clearNotification} />
       }
     </>
   )

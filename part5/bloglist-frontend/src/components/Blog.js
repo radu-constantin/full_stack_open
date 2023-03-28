@@ -21,7 +21,7 @@ const Blog = ({ blog, setBlogs }) => {
   async function deleteBlog(id) {
     await blogService.remove(id);
     setBlogs(prevBlogs => {
-      prevBlogs.filter(blog => blog.id !== id);
+      return prevBlogs.filter(blog => blog.id !== id);
     })
   }
 

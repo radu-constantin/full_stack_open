@@ -18,10 +18,11 @@ const Blog = ({ blog, setBlogs }) => {
     setLikes(updateLikes);
   }
 
-  async function deleteBlog(id) {
-    await blogService.remove(id);
+  async function deleteBlog(blogToDelete) {
+    if (window.confirm(`Are you sure you want to delete ${blogToDelete.title}`))
+    await blogService.remove(blogToDelete.id);
     setBlogs(prevBlogs => {
-      return prevBlogs.filter(blog => blog.id !== id);
+      return prevBlogs.filter(blog => blog.id !== blogToDelete.id);
     })
   }
 
@@ -36,9 +37,13 @@ const Blog = ({ blog, setBlogs }) => {
       <div>{blog.title} {blog.author} <button onClick={() => setShowDetails(false)}>hide</button></div>
       <div>{blog.url}</div>
       <div>likes {likes}<button onClick={() => updateLikes()}>like</button></div>
-      <button onClick={() => deleteBlog(blog.id)}>remove</button>
+      {JSON.parse(window.localStorage.getItem('loggedUser')).username === blog.user.username && <button onClick={() => deleteBlog(blog)}>remove</button>}
     </div>
   )
+
+  let loggedUser = JSON.parse(window.localStorage.getItem('loggedUser'));
+  console.log(`Local storage: ${loggedUser.username}`);
+  console.log(blog.user.username);
 
   return (
     showDetails ? expandedBlog : condensedBlog

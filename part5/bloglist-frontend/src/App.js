@@ -7,15 +7,6 @@ import Notification from './components/Notification'
 import blogService from './services/blogs';
 import Togglable from './components/Togglable';
 
-/*
-  Implement notifications for: 
-  1. succesful login
-  2. failed login
-
-  3. succesful blog creationg
-  4. failed blog creation
-*/
-
 const App = () => {
   const [blogs, setBlogs] = useState([]);
   const [user, setUser] = useState(null);
@@ -62,8 +53,7 @@ const App = () => {
           <Togglable buttonLabel="create blog" ref={blogFormRef}>
             <BlogForm updateBlogList={updateBlogList} setShowNotification={setShowNotification} clearNotification={clearNotification} />
           </Togglable>
-
-          <BlogList blogs={blogs} username={user.name} />
+          <BlogList blogs={blogs} username={user.name} setBlogs={setBlogs}/>
         </> :
         <LoginForm setUser={setUser} setShowNotification={setShowNotification} clearNotification={clearNotification} />
       }

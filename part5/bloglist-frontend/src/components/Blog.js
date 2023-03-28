@@ -8,7 +8,7 @@ const blogStyle = {
   marginBottom: "10px"
 }
 
-const Blog = ({ blog }) => {
+const Blog = ({ blog, setBlogs }) => {
   const [showDetails, setShowDetails] = useState(false);
   const [likes, setLikes] = useState(blog.likes);
 
@@ -16,6 +16,13 @@ const Blog = ({ blog }) => {
     const updateLikes = likes + 1;
     await blogService.update({...blog, likes: updateLikes, user: blog.user.id});
     setLikes(updateLikes);
+  }
+
+  async function deleteBlog(id) {
+    await blogService.remove(id);
+    setBlogs(prevBlogs => {
+      prevBlogs.filter(blog => blog.id !== id);
+    })
   }
 
   const condensedBlog = (
@@ -29,6 +36,7 @@ const Blog = ({ blog }) => {
       <div>{blog.title} {blog.author} <button onClick={() => setShowDetails(false)}>hide</button></div>
       <div>{blog.url}</div>
       <div>likes {likes}<button onClick={() => updateLikes()}>like</button></div>
+      <button onClick={() => deleteBlog(blog.id)}>remove</button>
     </div>
   )
 

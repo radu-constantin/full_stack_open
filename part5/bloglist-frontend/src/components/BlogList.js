@@ -29,4 +29,4 @@ BlogList.propTypes = {
   blogs: PropTypes.array.isRequired,
 }
 
-export default BlogList;
+export default BlogList

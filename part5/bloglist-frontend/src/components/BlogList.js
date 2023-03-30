@@ -1,3 +1,5 @@
+import PropTypes from 'prop-types';
+
 import Blog from './Blog';
 
 function BlogList({ blogs, setBlogs }) {
@@ -17,10 +19,14 @@ function BlogList({ blogs, setBlogs }) {
     <div>
       <h2>blogs</h2>
       {sortedBlogs.map(blog =>
-        <Blog key={blog.id} blog={blog} setBlogs={setBlogs}/>
+        <Blog key={blog.id} blog={blog} setBlogs={setBlogs} />
       )}
     </div>
   )
+}
+
+BlogList.propTypes = {
+  blogs: PropTypes.array.isRequired,
 }
 
 export default BlogList;

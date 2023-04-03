@@ -1,47 +1,47 @@
 import { useState, useEffect, useRef } from 'react'
-import BlogList from './components/BlogList';
-import LoginForm from './components/LoginForm';
-import BlogForm from './components/BlogForm';
+import BlogList from './components/BlogList'
+import LoginForm from './components/LoginForm'
+import BlogForm from './components/BlogForm'
 import Notification from './components/Notification'
 
-import blogService from './services/blogs';
-import Togglable from './components/Togglable';
+import blogService from './services/blogs'
+import Togglable from './components/Togglable'
 
 const App = () => {
-  const [blogs, setBlogs] = useState([]);
-  const [user, setUser] = useState(null);
-  const [showNotification, setShowNotification] = useState(null);
+  const [blogs, setBlogs] = useState([])
+  const [user, setUser] = useState(null)
+  const [showNotification, setShowNotification] = useState(null)
 
-  const blogFormRef = useRef();
+  const blogFormRef = useRef()
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
       setBlogs(blogs)
     )
-  }, []);
+  }, [])
 
   useEffect(() => {
-    const loggedUser = window.localStorage.getItem('loggedUser');
+    const loggedUser = window.localStorage.getItem('loggedUser')
     if (loggedUser) {
-      setUser(JSON.parse(loggedUser));
-      blogService.setToken(JSON.parse(loggedUser).token);
+      setUser(JSON.parse(loggedUser))
+      blogService.setToken(JSON.parse(loggedUser).token)
     }
   }, [])
 
   function handleLogout(event) {
-    window.localStorage.removeItem('loggedUser');
-    setUser(null);
+    window.localStorage.removeItem('loggedUser')
+    setUser(null)
   }
 
   function updateBlogList(newBlog) {
-    setBlogs([...blogs, newBlog]);
+    setBlogs([...blogs, newBlog])
   }
 
   function clearNotification() {
     setTimeout(() => {
-      setShowNotification(null);
-    }, 5000);
-  };
+      setShowNotification(null)
+    }, 5000)
+  }
 
   return (
     <>

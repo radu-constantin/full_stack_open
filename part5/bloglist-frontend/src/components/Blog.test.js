@@ -3,6 +3,9 @@ import '@testing-library/jest-dom/extend-expect'
 import userEvent from '@testing-library/user-event'
 
 import Blog from './Blog'
+import blogService from '../services/blogs'
+
+jest.mock('../services/blogs')
 
 const testBlog = {
   author: 'admin',
@@ -38,4 +41,16 @@ test('when view button is clicked, blog URL and number of likes are also shown',
   await user.click(button)
   screen.getByText(/likes/)
   screen.getByText(/www.adminblog.com/)
+})
+
+test('when like button is clicked twice, the corresponding function is called twice', async () => {
+  render(<Blog blog={testBlog} />)
+  const user = userEvent.setup()
+  const button = screen.getByText('view')
+  await user.click(button)
+  const likeButton = screen.getByText('like')
+  await user.click(likeButton)
+  await user.click(likeButton)
+
+  expect(blogService.update).toBeCalledTimes(2)
 })

@@ -1,26 +1,26 @@
-import { useState } from "react";
-import blogService from '../services/blogs';
+import { useState } from "react"
+import blogService from '../services/blogs'
 
 function BlogForm({ updateBlogList, setShowNotification, clearNotification, toggleVisibility }) {
-  const [title, setTitle] = useState('');
-  const [author, setAuthor] = useState('');
-  const [url, setUrl] = useState('');
+  const [title, setTitle] = useState('')
+  const [author, setAuthor] = useState('')
+  const [url, setUrl] = useState('')
 
   async function submitHandler(event) {
-    event.preventDefault();
+    event.preventDefault()
     try {
-      const newBlog = await blogService.create({ title, author, url });
-      setTitle('');
-      setAuthor('');
-      setUrl('');
-      updateBlogList(newBlog);
-      setShowNotification({type: 'success', message: `"${newBlog.title}" was successfuly added`})
-      clearNotification();
-      toggleVisibility();
+      const newBlog = await blogService.create({ title, author, url })
+      setTitle('')
+      setAuthor('')
+      setUrl('')
+      updateBlogList(newBlog)
+      setShowNotification({ type: 'success', message: `"${newBlog.title}" was successfuly added` })
+      clearNotification()
+      toggleVisibility()
     }
-    catch(error) {
-      setShowNotification({type: 'failure', message: `${error.response.data.error}`})
-      clearNotification();
+    catch (error) {
+      setShowNotification({ type: 'failure', message: 'Something went wrong' })
+      clearNotification()
     }
   }
 
@@ -46,4 +46,4 @@ function BlogForm({ updateBlogList, setShowNotification, clearNotification, togg
   )
 }
 
-export default BlogForm;
+export default BlogForm

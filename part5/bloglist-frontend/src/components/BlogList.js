@@ -1,17 +1,17 @@
-import PropTypes from 'prop-types';
+import PropTypes from 'prop-types'
 
-import Blog from './Blog';
+import Blog from './Blog'
 
 function BlogList({ blogs, setBlogs }) {
   const sortedBlogs = blogs.sort(sortBlogs)
 
   function sortBlogs(blogA, blogB) {
     if (blogA.likes > blogB.likes) {
-      return -1;
+      return -1
     } else if (blogA.likes < blogB.likes) {
-      return 1;
+      return 1
     } else {
-      return 0;
+      return 0
     }
   }
 

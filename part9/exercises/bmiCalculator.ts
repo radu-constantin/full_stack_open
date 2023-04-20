@@ -1,5 +1,11 @@
 type BMIResult = 'Underweight' | 'Normal' | 'Overweight' | 'Obese';
 
+interface BMI {
+  weight: number,
+  height: number,
+  bmi: BMIResult
+}
+
 interface BMIData {
   height: number,
   weight: number
@@ -19,31 +25,35 @@ function parseArguments(args: string[]): BMIData {
   };
 };
 
-function calculateBmi(height: number, weight: number) : BMIResult {
+function calculateBmi(height: number, weight: number): BMI {
   const BMI = Number((weight / Math.pow(height / 100, 2)).toFixed(2));
   if (BMI >= 30) {
-    return "Obese";
+    return {
+      weight,
+      height,
+      bmi: "Obese"
+    };
   } else if (BMI >= 25) {
-    return "Overweight";
+    return {
+      weight,
+      height,
+      bmi: "Overweight"
+    };
   } else if (BMI >= 18.5) {
-    return "Normal";
+    return {
+      weight,
+      height,
+      bmi: "Normal"
+    };
   } else {
-    return "Underweight";
+    return {
+      weight,
+      height,
+      bmi: "Underweight"
+    };
   }
 }
 
-
-
-try {
-  console.log(process.argv)
-  const {height, weight} = parseArguments(process.argv);
-  console.log(calculateBmi(height, weight));
-} catch(error: unknown) {
-  let errorMessage = 'Something bad happened.';
-  if (error instanceof Error) {
-    errorMessage += ` Error: ${error.message}`;
-  }
-  console.log(errorMessage);
-}
+export { calculateBmi, parseArguments };
 
 

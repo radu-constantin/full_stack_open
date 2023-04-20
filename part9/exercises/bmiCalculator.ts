@@ -1,22 +1,23 @@
-/*
-Write a function that calculates BMI based on a given height IN CENTIMETERS and weight IN KILOGRAMS.
-Return a message that suits the results.
-
-calculateBmi(180, 74) ---> Normal (healthy weight);
-
-BMI = weight / height ^2
-< 18.5 Under Wieght
-18.5 - 24.9 Normal
-25-29.9 Over Weight
-> 30 Obese
-
-Input: Weight - Number
-       Height - Number
-
-Output: String - Normal (healty weight);
-*/
-
 type BMIResult = 'Underweight' | 'Normal' | 'Overweight' | 'Obese';
+
+interface BMIData {
+  height: number,
+  weight: number
+}
+
+function parseArguments(args: string[]): BMIData {
+  if (args.length < 4) throw new Error('Not enough arguments were given!')
+  if (args.length > 4) throw new Error('Too many arguments were given!');
+
+  if (isNaN(Number(args[2])) || isNaN(Number(args[3]))) {
+    throw new Error("Provided values are not numbers!");
+  }
+
+  return {
+    height: Number(args[2]),
+    weight: Number(args[3])
+  };
+};
 
 function calculateBmi(height: number, weight: number) : BMIResult {
   const BMI = Number((weight / Math.pow(height / 100, 2)).toFixed(2));
@@ -31,4 +32,18 @@ function calculateBmi(height: number, weight: number) : BMIResult {
   }
 }
 
-console.log(calculateBmi(180, 74));
+
+
+try {
+  console.log(process.argv)
+  const {height, weight} = parseArguments(process.argv);
+  console.log(calculateBmi(height, weight));
+} catch(error: unknown) {
+  let errorMessage = 'Something bad happened.';
+  if (error instanceof Error) {
+    errorMessage += ` Error: ${error.message}`;
+  }
+  console.log(errorMessage);
+}
+
+

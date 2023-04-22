@@ -12,7 +12,7 @@ interface BMIData {
 }
 
 function parseArguments(args: string[]): BMIData {
-  if (args.length < 4) throw new Error('Not enough arguments were given!')
+  if (args.length < 4) throw new Error('Not enough arguments were given!');
   if (args.length > 4) throw new Error('Too many arguments were given!');
 
   if (isNaN(Number(args[2])) || isNaN(Number(args[3]))) {
@@ -23,7 +23,7 @@ function parseArguments(args: string[]): BMIData {
     height: Number(args[2]),
     weight: Number(args[3])
   };
-};
+}
 
 function calculateBmi(height: number, weight: number): BMI {
   const BMI = Number((weight / Math.pow(height / 100, 2)).toFixed(2));

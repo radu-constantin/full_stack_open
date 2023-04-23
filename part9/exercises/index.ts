@@ -1,5 +1,6 @@
-import express from 'express';
+import express, { json } from 'express';
 import { calculateBmi } from './bmiCalculator';
+import { calculateExercises } from './exerciseCalculator';
 
 const app = express();
 const PORT = 3003;
@@ -24,13 +25,15 @@ function parseQuery(query: bmiQuery) {
   };
 }
 
+app.use(json());
+
 app.get('/hello', (_req, res) => {
   res.send('Hello Full Stack!');
 });
 
 app.get('/bmi', (req, res) => {
   try {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    // @ts-ignore
     const {height, weight} = parseQuery(req.query);
     const result = calculateBmi(height, weight);
 
@@ -43,7 +46,15 @@ app.get('/bmi', (req, res) => {
     
     res.send(errorMessage);
   }
-  
+});
+
+app.post('/exercises', (req, res) => {
+  const data = req.body;
+  if (!data.daily_exercises || !data.target) {
+    res.status(400).send({error: 'parameters missing'});
+  }
+  const result = calculateExercises(data.daily_exercises, data.target);
+  res.send(result);
 });
 
 app.listen(PORT, () => {
